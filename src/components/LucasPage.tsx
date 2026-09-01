@@ -58,9 +58,9 @@ export const LucasPage: React.FC = () => {
             <div className="absolute -inset-1 rounded-full bg-radial from-[#C9A24A] via-[#D4AF6A] to-[#A8832D] opacity-85 blur-md animate-pulse-gold"></div>
             <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-2 border-[#C9A24A] bg-[#111] mx-auto shadow-2xl">
               <img 
-                src="/images/lucas-e-layla.png" 
+                src="/images/lucas-perfil.png" 
                 alt="Lucas Rodrigues" 
-                className="w-full h-full object-cover filter contrast-[1.08] brightness-[1.02]"
+                className="w-full h-full object-cover object-top filter contrast-[1.05] brightness-[1.02]"
               />
             </div>
             <div className="absolute bottom-1 right-1 bg-[#C9A24A] text-black p-1.5 rounded-full shadow-lg border border-black" title="Verificado">
