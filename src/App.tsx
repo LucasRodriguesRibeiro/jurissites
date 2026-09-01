@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X, ArrowRight, ChevronDown, CheckCircle2, Globe, Layout, Zap, MessageCircle, Search, Star, ArrowUpRight } from 'lucide-react';
+import { LucasPage } from './components/LucasPage';
 
 const WA_LINK = "https://wa.me/5574999249182";
 
@@ -18,6 +19,7 @@ const Navbar = () => {
     { label: 'Serviços', href: '#servicos' },
     { label: 'Processo', href: '#processo' },
     { label: 'Diferenciais', href: '#diferenciais' },
+    { label: 'Lucas', href: '/lucas' },
   ];
   return (
     <nav className={`fixed w-full z-50 transition-all duration-500 ${scrolled ? 'py-3 bg-black/90 backdrop-blur-xl border-b border-white/5' : 'py-5 bg-transparent'}`}>
@@ -388,6 +390,21 @@ const WhatsAppBtn = () => (
 );
 
 export default function App() {
+  const [currentPath, setCurrentPath] = useState(window.location.pathname);
+
+  useEffect(() => {
+    const handleLocationChange = () => {
+      setCurrentPath(window.location.pathname);
+    };
+
+    window.addEventListener('popstate', handleLocationChange);
+    return () => window.removeEventListener('popstate', handleLocationChange);
+  }, []);
+
+  if (currentPath === '/lucas' || currentPath === '/lucas/' || currentPath.startsWith('/lucas')) {
+    return <LucasPage />;
+  }
+
   return (
     <div className="min-h-screen bg-[#0B0B0B]">
       <Navbar/>
