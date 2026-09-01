@@ -5,7 +5,7 @@ import { LucasPage } from './components/LucasPage';
 
 const WA_LINK = "https://wa.me/5574999249182";
 
-const Navbar = () => {
+const Navbar = ({ onNavigateLucas }: { onNavigateLucas: () => void }) => {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
@@ -19,7 +19,7 @@ const Navbar = () => {
     { label: 'Serviços', href: '#servicos' },
     { label: 'Processo', href: '#processo' },
     { label: 'Diferenciais', href: '#diferenciais' },
-    { label: 'Lucas', href: '/lucas' },
+    { label: 'Lucas', href: '/lucas', isLucas: true },
   ];
   return (
     <nav className={`fixed w-full z-50 transition-all duration-500 ${scrolled ? 'py-3 bg-black/90 backdrop-blur-xl border-b border-white/5' : 'py-5 bg-transparent'}`}>
@@ -29,7 +29,19 @@ const Navbar = () => {
         </a>
         <div className="hidden md:flex items-center gap-8">
           {links.map(l => (
-            <a key={l.label} href={l.href} className="text-white/60 hover:text-white text-xs font-medium tracking-widest uppercase transition-colors duration-300">{l.label}</a>
+            <a 
+              key={l.label} 
+              href={l.href} 
+              onClick={(e) => {
+                if (l.isLucas) {
+                  e.preventDefault();
+                  onNavigateLucas();
+                }
+              }}
+              className={l.isLucas ? "text-[#C9A24A] font-semibold text-xs tracking-widest uppercase transition-colors duration-300 border border-[#C9A24A]/30 px-3 py-1 rounded-full hover:bg-[#C9A24A] hover:text-black" : "text-white/60 hover:text-white text-xs font-medium tracking-widest uppercase transition-colors duration-300"}
+            >
+              {l.label}
+            </a>
           ))}
           <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="btn-primary text-xs px-5 py-3">Solicitar Orçamento</a>
         </div>
@@ -42,7 +54,20 @@ const Navbar = () => {
           <motion.div initial={{opacity:0,y:-10}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-10}}
             className="md:hidden bg-[#0d0d0d] border-t border-white/5 px-6 py-10 flex flex-col items-center gap-8 text-center">
             {links.map(l => (
-              <a key={l.label} href={l.href} onClick={()=>setOpen(false)} className="text-white/70 hover:text-[#C9A24A] text-sm font-medium tracking-[0.2em] uppercase transition-colors">{l.label}</a>
+              <a 
+                key={l.label} 
+                href={l.href} 
+                onClick={(e) => {
+                  setOpen(false);
+                  if (l.isLucas) {
+                    e.preventDefault();
+                    onNavigateLucas();
+                  }
+                }} 
+                className={l.isLucas ? "text-[#C9A24A] font-bold text-sm tracking-[0.2em] uppercase" : "text-white/70 hover:text-[#C9A24A] text-sm font-medium tracking-[0.2em] uppercase transition-colors"}
+              >
+                {l.label}
+              </a>
             ))}
             <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="btn-primary w-full text-xs">Solicitar Orçamento</a>
           </motion.div>
@@ -366,14 +391,27 @@ const FinalCTA = () => (
   </section>
 );
 
-const Footer = () => (
+const Footer = ({ onNavigateLucas }: { onNavigateLucas: () => void }) => (
   <footer className="bg-[#080808] border-t border-white/5 py-12 px-6">
     <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
       <div className="flex items-center gap-3">
         <img src="/logo-jurissites.png" alt="JurisSites" className="h-8 w-auto object-contain" />
         <div className="text-white/35 text-xs">Sites para Advogados</div>
       </div>
-      <p className="text-white/25 text-xs text-center">Atendimento em todo o Brasil</p>
+      
+      {/* Botão para acessar a Página do Lucas */}
+      <a 
+        href="/lucas" 
+        onClick={(e) => {
+          e.preventDefault();
+          onNavigateLucas();
+        }}
+        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#C9A24A]/10 border border-[#C9A24A]/40 text-[#C9A24A] hover:bg-[#C9A24A] hover:text-black transition-all text-xs font-semibold uppercase tracking-wider shadow-lg"
+      >
+        <span>Acessar Página do Lucas</span>
+        <ArrowRight size={14} />
+      </a>
+
       <p className="text-white/25 text-xs">© {new Date().getFullYear()} JurisSites. Todos os direitos reservados.</p>
     </div>
   </footer>
@@ -401,13 +439,19 @@ export default function App() {
     return () => window.removeEventListener('popstate', handleLocationChange);
   }, []);
 
+  const goToLucas = () => {
+    window.history.pushState(null, '', '/lucas');
+    setCurrentPath('/lucas');
+    window.scrollTo(0, 0);
+  };
+
   if (currentPath === '/lucas' || currentPath === '/lucas/' || currentPath.startsWith('/lucas')) {
     return <LucasPage />;
   }
 
   return (
     <div className="min-h-screen bg-[#0B0B0B]">
-      <Navbar/>
+      <Navbar onNavigateLucas={goToLucas} />
       <Hero/>
       <AboutUs/>
       <Problem/>
@@ -416,7 +460,7 @@ export default function App() {
       <Process/>
       <Differentials/>
       <FinalCTA/>
-      <Footer/>
+      <Footer onNavigateLucas={goToLucas} />
       <WhatsAppBtn/>
     </div>
   );
