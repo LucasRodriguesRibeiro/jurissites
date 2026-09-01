@@ -428,24 +428,48 @@ const WhatsAppBtn = () => (
 );
 
 export default function App() {
-  const [currentPath, setCurrentPath] = useState(window.location.pathname);
+  const [currentPath, setCurrentPath] = useState(() => ({
+    pathname: window.location.pathname,
+    hash: window.location.hash,
+    search: window.location.search
+  }));
 
   useEffect(() => {
     const handleLocationChange = () => {
-      setCurrentPath(window.location.pathname);
+      setCurrentPath({
+        pathname: window.location.pathname,
+        hash: window.location.hash,
+        search: window.location.search
+      });
     };
 
     window.addEventListener('popstate', handleLocationChange);
-    return () => window.removeEventListener('popstate', handleLocationChange);
+    window.addEventListener('hashchange', handleLocationChange);
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      window.removeEventListener('hashchange', handleLocationChange);
+    };
   }, []);
 
   const goToLucas = () => {
     window.history.pushState(null, '', '/lucas');
-    setCurrentPath('/lucas');
+    setCurrentPath({
+      pathname: '/lucas',
+      hash: '',
+      search: ''
+    });
     window.scrollTo(0, 0);
   };
 
-  if (currentPath === '/lucas' || currentPath === '/lucas/' || currentPath.startsWith('/lucas')) {
+  const isLucas = 
+    currentPath.pathname.toLowerCase() === '/lucas' ||
+    currentPath.pathname.toLowerCase() === '/lucas/' ||
+    currentPath.pathname.toLowerCase().startsWith('/lucas') ||
+    currentPath.hash.toLowerCase() === '#lucas' ||
+    currentPath.hash.toLowerCase() === '#/lucas' ||
+    currentPath.search.toLowerCase().includes('lucas');
+
+  if (isLucas) {
     return <LucasPage />;
   }
 
