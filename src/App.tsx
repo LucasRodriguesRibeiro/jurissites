@@ -1,430 +1,779 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Menu, X, ArrowRight, ChevronDown, CheckCircle2, Globe, Layout, Zap, MessageCircle, Search, Star, ArrowUpRight } from 'lucide-react';
+import { 
+  Menu, 
+  X, 
+  Check, 
+  Star, 
+  Smartphone, 
+  MessageCircle, 
+  MapPin, 
+  FileText, 
+  Globe, 
+  ShieldCheck, 
+  Mail, 
+  Server, 
+  Landmark, 
+  Scale, 
+  Handshake, 
+  Users, 
+  Award, 
+  Monitor, 
+  Instagram, 
+  Plus, 
+  Minus,
+  ChevronRight
+} from 'lucide-react';
 import { LucasPage } from './components/LucasPage';
+import { SEO_PAGES } from './data/seoPages';
+import { SeoLandingPage } from './components/SeoLandingPage';
 
-const WA_LINK = "https://wa.me/5574999249182";
+const WA_LINK = "https://wa.me/5574999249182?text=Ol%C3%A1!%20Gostaria%20de%20solicitar%20um%20or%C3%A7amento%20para%20o%20site%20do%20meu%20escrit%C3%B3rio.";
+const INSTAGRAM_LINK = "https://www.instagram.com/jurissites/";
 
-const Navbar = ({ onNavigateLucas }: { onNavigateLucas: () => void }) => {
+const Navbar = () => {
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 40);
-    window.addEventListener('scroll', fn);
-    return () => window.removeEventListener('scroll', fn);
-  }, []);
+
   const links = [
-    { label: 'Início', href: '#home' },
-    { label: 'Sobre', href: '#sobre' },
-    { label: 'Serviços', href: '#servicos' },
-    { label: 'Processo', href: '#processo' },
-    { label: 'Diferenciais', href: '#diferenciais' },
-    { label: 'Lucas', href: '/lucas', isLucas: true },
+    { label: 'Como Funciona', href: '#como-funciona' },
+    { label: 'O que Inclui', href: '#o-que-inclui' },
+    { label: 'Especialidades', href: '#especialidades' },
+    { label: 'Sobre Nós', href: '#sobre-nos' },
+    { label: 'Perguntas Frequentes', href: '#faq' },
   ];
+
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-500 ${scrolled ? 'py-3 bg-black/90 backdrop-blur-xl border-b border-white/5' : 'py-5 bg-transparent'}`}>
-      <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
-        <a href="#home" className="flex items-center">
-          <img src="/logo-jurissites.png" alt="JurisSites" className="h-10 w-auto object-contain" />
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-xs">
+      <div className="max-w-7xl mx-auto px-6 h-16 sm:h-20 flex items-center justify-between">
+        
+        {/* Logo */}
+        <a href="/" className="flex items-center gap-3 group">
+          <img src="/logo-jurissites.png" alt="JurisSites" className="h-9 sm:h-10 w-auto object-contain transition-transform group-hover:scale-105" />
+          <div className="flex flex-col text-left">
+            <span className="font-extrabold text-xl tracking-tight text-gray-900 leading-none">
+              JurisSites
+            </span>
+            <span className="text-[10px] text-gray-400 font-semibold tracking-wider uppercase mt-1">
+              Sites para Advogados
+            </span>
+          </div>
         </a>
-        <div className="hidden md:flex items-center gap-8">
+
+        {/* Desktop Menu */}
+        <div className="hidden lg:flex items-center gap-7">
           {links.map(l => (
             <a 
               key={l.label} 
               href={l.href} 
-              onClick={(e) => {
-                if (l.isLucas) {
-                  e.preventDefault();
-                  onNavigateLucas();
-                }
-              }}
-              className={l.isLucas ? "text-[#C9A24A] font-semibold text-xs tracking-widest uppercase transition-colors duration-300 border border-[#C9A24A]/30 px-3 py-1 rounded-full hover:bg-[#C9A24A] hover:text-black" : "text-white/60 hover:text-white text-xs font-medium tracking-widest uppercase transition-colors duration-300"}
+              className="text-gray-700 hover:text-[#C9A24A] text-sm font-medium transition-colors"
             >
               {l.label}
             </a>
           ))}
-          <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="btn-primary text-xs px-5 py-3">Solicitar Orçamento</a>
+
+          <a 
+            href={WA_LINK} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="text-gray-900 hover:text-[#C9A24A] text-sm font-bold uppercase tracking-wider transition-colors"
+          >
+            PEDIR ORÇAMENTO
+          </a>
+
+          <a 
+            href={INSTAGRAM_LINK} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            aria-label="Instagram da JurisSites"
+            className="w-9 h-9 rounded-full bg-gray-100 hover:bg-[#C9A24A]/10 text-gray-700 hover:text-[#C9A24A] flex items-center justify-center transition-all"
+          >
+            <Instagram size={17} />
+          </a>
         </div>
-        <button className="md:hidden text-white/70 hover:text-white" onClick={() => setOpen(!open)}>
-          {open ? <X size={22}/> : <Menu size={22}/>}
+
+        {/* Mobile Hamburger */}
+        <button 
+          aria-label="Alternar Menu" 
+          className="lg:hidden text-gray-800 p-2" 
+          onClick={() => setOpen(!open)}
+        >
+          {open ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
+
+      {/* Mobile Drawer */}
       <AnimatePresence>
         {open && (
-          <motion.div initial={{opacity:0,y:-10}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-10}}
-            className="md:hidden bg-[#0d0d0d] border-t border-white/5 px-6 py-10 flex flex-col items-center gap-8 text-center">
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }} 
+            animate={{ opacity: 1, height: 'auto' }} 
+            exit={{ opacity: 0, height: 0 }}
+            className="lg:hidden bg-white border-b border-gray-200 px-6 py-6 flex flex-col gap-4 text-center shadow-lg"
+          >
             {links.map(l => (
               <a 
                 key={l.label} 
                 href={l.href} 
-                onClick={(e) => {
-                  setOpen(false);
-                  if (l.isLucas) {
-                    e.preventDefault();
-                    onNavigateLucas();
-                  }
-                }} 
-                className={l.isLucas ? "text-[#C9A24A] font-bold text-sm tracking-[0.2em] uppercase" : "text-white/70 hover:text-[#C9A24A] text-sm font-medium tracking-[0.2em] uppercase transition-colors"}
+                onClick={() => setOpen(false)} 
+                className="text-gray-700 hover:text-[#C9A24A] font-medium py-2 text-base transition-colors"
               >
                 {l.label}
               </a>
             ))}
-            <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="btn-primary w-full text-xs">Solicitar Orçamento</a>
+            <a 
+              href={WA_LINK} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="btn-gold w-full text-center mt-2"
+            >
+              » PEDIR ORÇAMENTO
+            </a>
+
+            <a 
+              href={INSTAGRAM_LINK} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="inline-flex items-center justify-center gap-2 text-gray-600 hover:text-[#C9A24A] pt-2 text-sm font-medium transition-colors"
+            >
+              <Instagram size={16} /> @jurissites
+            </a>
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </header>
   );
 };
 
+// HERO SECTION (Reduced space, gold CTA, clean)
 const Hero = () => (
-  <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-hero-gradient pt-24 pb-20">
-    <div className="absolute inset-0 pointer-events-none">
-      <div className="absolute top-1/3 right-1/4 w-96 h-96 rounded-full opacity-5" style={{background:'radial-gradient(circle,#C9A24A,transparent 70%)'}}/>
-      <div className="absolute bottom-1/4 left-1/5 w-64 h-64 rounded-full opacity-3" style={{background:'radial-gradient(circle,#C9A24A,transparent 70%)'}}/>
-      <div className="absolute inset-0 opacity-[0.03]" style={{backgroundImage:'linear-gradient(rgba(201,162,74,0.5) 1px,transparent 1px),linear-gradient(90deg,rgba(201,162,74,0.5) 1px,transparent 1px)',backgroundSize:'80px 80px'}}/>
-    </div>
-    <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
-      <motion.div initial={{opacity:0,y:24}} animate={{opacity:1,y:0}} transition={{duration:0.9,ease:[0.25,0.8,0.25,1]}}>
-        <div className="tag-gold mb-6 justify-center">
-          <span className="w-5 h-px bg-[#C9A24A]"/>
-          Atendimento em todo o Brasil · Projetos personalizados
-          <span className="w-5 h-px bg-[#C9A24A]"/>
+  <section id="home" className="relative bg-white pt-4 pb-14 sm:pt-6 sm:pb-20 overflow-hidden border-b border-gray-100">
+    <div className="max-w-7xl mx-auto px-6">
+      <div className="grid lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+        
+        {/* Left Column (Copy + Gold CTA) */}
+        <div className="lg:col-span-6 text-left">
+          
+          {/* Badge: Especialistas Em */}
+          <div className="inline-block bg-[#F1F3F5] text-gray-700 text-xs font-semibold px-4 py-1.5 rounded-full mb-5 tracking-wide">
+            Especialistas Em
+          </div>
+
+          {/* Main Title */}
+          <h1 className="text-4xl sm:text-5xl lg:text-[54px] font-extrabold text-[#111111] tracking-tight leading-[1.12] mb-5">
+            Site para Advogados
+          </h1>
+
+          {/* Subheading */}
+          <p className="font-bold text-[#111111] text-base sm:text-lg mb-3 leading-snug">
+            Transforme seu escritório em uma referência online.
+          </p>
+
+          {/* Description */}
+          <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-8 max-w-xl font-normal">
+            Nós criamos sites profissionais e feitos sob medida para advogados – seja você um advogado autônomo ou sócio de um escritório – para atrair clientes qualificados e fortalecer sua autoridade digital.
+          </p>
+
+          {/* Signature Gold CTA Button */}
+          <div>
+            <a 
+              href={WA_LINK} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="btn-gold inline-flex items-center gap-2"
+            >
+              <span className="font-bold text-base">»</span> PEDIR ORÇAMENTO
+            </a>
+          </div>
+
         </div>
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-light text-white leading-tight mb-6" style={{fontFamily:'Cormorant Garamond,serif',fontWeight:300}}>
-          Sites que posicionam{' '}
-          <span className="text-gold-gradient italic">advogados</span>
-          <br/>como referência no digital
-        </h1>
-        <p className="text-white/55 text-base lg:text-lg leading-relaxed mb-10 max-w-2xl mx-auto font-light">
-          Para advogados que desejam crescer sua autoridade e seu escritório com uma presença digital profissional e estratégica.
-        </p>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
-          <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="btn-primary w-full sm:w-auto">
-            Solicitar Orçamento <ArrowRight size={15}/>
-          </a>
-          <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="btn-ghost w-full sm:w-auto">
-            <MessageCircle size={15}/> Falar no WhatsApp
-          </a>
+
+        {/* Right Column: 3 Smartphones Mockup + 4 Floating Icons */}
+        <div className="lg:col-span-6 relative flex items-center justify-center">
+          
+          {/* Floating Badges */}
+          <div className="floating-badge w-11 h-11 text-gray-700 -top-3 left-1/4 sm:left-1/3 animate-float-subtle">
+            <Handshake size={20} />
+          </div>
+
+          <div className="floating-badge w-11 h-11 text-[#C9A24A] top-1/3 -left-2 sm:left-4 animate-float-subtle" style={{ animationDelay: '1s' }}>
+            <Scale size={20} />
+          </div>
+
+          <div className="floating-badge w-11 h-11 text-gray-700 bottom-16 left-2 sm:left-8 animate-float-subtle" style={{ animationDelay: '2s' }}>
+            <FileText size={20} />
+          </div>
+
+          <div className="floating-badge w-11 h-11 text-gray-700 -bottom-3 right-1/4 sm:right-1/3 animate-float-subtle" style={{ animationDelay: '1.5s' }}>
+            <Landmark size={20} />
+          </div>
+
+          <img 
+            src="/images/hero-phones.png" 
+            alt="Site para Advogados em Smartphones" 
+            className="w-full max-w-lg lg:max-w-none h-auto object-contain mx-auto select-none pointer-events-none drop-shadow-2xl"
+          />
+
         </div>
-        <p className="tag-gold justify-center text-[10px] opacity-60">
-          Atendimento em todo o Brasil · Projetos personalizados
-        </p>
-      </motion.div>
+
+      </div>
     </div>
-    <motion.div animate={{y:[0,-8,0]}} transition={{duration:4,repeat:Infinity,ease:'easeInOut'}}
-      className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/20">
-      <ChevronDown size={20}/>
-    </motion.div>
   </section>
 );
 
-const AboutUs = () => (
-  <section id="sobre" className="section-padding bg-section-card border-y border-white/5 overflow-hidden">
-    <div className="max-w-6xl mx-auto px-6">
-      <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-        <motion.div 
-          initial={{ opacity: 0, x: -30 }} 
-          whileInView={{ opacity: 1, x: 0 }} 
-          viewport={{ once: true }} 
-          transition={{ duration: 0.8 }}
-          className="text-center lg:text-left"
-        >
-          <div className="tag-gold mb-5 justify-center lg:justify-start">
-            <span className="w-5 h-px bg-[#C9A24A]"/> Sobre a JurisSites
-          </div>
-          <h2 className="text-3xl lg:text-5xl font-light text-white mb-6 leading-tight" style={{ fontFamily: 'Cormorant Garamond,serif' }}>
-            A união entre o <span className="text-gold-gradient italic">Direito</span> e a <span className="text-gold-gradient italic">Tecnologia</span>
-          </h2>
-          <div className="gold-divider mx-auto lg:ml-0 mb-8"/>
+// SECTION 2: 4 Quick Highlight Columns
+const FourPillars = () => {
+  return (
+    <section id="como-funciona" className="py-14 bg-[#F8F9FA] border-b border-gray-200/70">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           
-          <div className="space-y-6 text-white/70 text-sm lg:text-base leading-relaxed font-light">
-            <p>
-              A JurisSites nasceu da união de duas visões complementares para resolver um problema real: a dificuldade que grandes advogados enfrentam para transmitir sua autoridade no mundo digital.
+          <div className="text-left">
+            <h3 className="text-xl font-bold text-gray-900 mb-2">
+              Site para Advogados
+            </h3>
+            <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">
+              Especializados em site para advogados iniciantes, advogado autônomo e escritório de advocacia. Cuide dos seus casos, deixe a criação do site para nós!
             </p>
-            <p>
-              Fundada por <span className="text-white font-medium">Layla Marreta</span>, advogada que entende profundamente as dores e a ética do mercado jurídico, e <span className="text-white font-medium">Lucas Rodrigues</span>, analista de sistemas e marketing estratégico, nossa agência combina o rigor técnico do Direito com a inovação da tecnologia.
+          </div>
+
+          <div className="text-left">
+            <div className="w-10 h-10 rounded-full bg-[#C9A24A]/10 text-[#C9A24A] flex items-center justify-center mb-3">
+              <Monitor size={20} />
+            </div>
+            <h4 className="text-base font-bold text-gray-900 mb-1.5">
+              Solução Completa
+            </h4>
+            <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">
+              Cuidamos de tudo para você: hospedagem segura, e-mail profissional, manutenção contínua e suporte dedicado.
             </p>
-            <div className="card-premium p-6 border-l-2 border-l-[#C9A24A] bg-[#C9A24A]/5">
-              <h4 className="text-[#C9A24A] font-medium mb-2 text-xs tracking-widest uppercase">Nossa Missão</h4>
-              <p className="text-white/80 italic">
-                "Transformar a presença digital de advogados através de tecnologia e marketing estratégico, garantindo que sua autoridade no mundo real seja refletida com excelência no digital."
+          </div>
+
+          <div className="text-left">
+            <div className="w-10 h-10 rounded-full bg-[#C9A24A]/10 text-[#C9A24A] flex items-center justify-center mb-3">
+              <Award size={20} />
+            </div>
+            <h4 className="text-base font-bold text-gray-900 mb-1.5">
+              Especialistas
+            </h4>
+            <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">
+              Empresa co-fundada por advogada, nós sabemos exatamente das necessidades, da rotina e dos limites éticos da advocacia digital.
+            </p>
+          </div>
+
+          <div className="text-left">
+            <div className="w-10 h-10 rounded-full bg-[#C9A24A]/10 text-[#C9A24A] flex items-center justify-center mb-3">
+              <Users size={20} />
+            </div>
+            <h4 className="text-base font-bold text-gray-900 mb-1.5">
+              Capte mais Clientes
+            </h4>
+            <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">
+              Um site otimizado e profissional é o canal que conecta você a potenciais clientes no momento certo: quando eles precisam de um advogado.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// SECTION 3: Provocação Estratégica
+const ProvocationSection = () => (
+  <section className="py-20 bg-white border-b border-gray-100 text-center">
+    <div className="max-w-4xl mx-auto px-6">
+      <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 leading-snug mb-6">
+        Advogado, você está pronto para abrir as portas do seu escritório jurídico para o Brasil inteiro?
+      </h2>
+
+      <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-8 max-w-3xl mx-auto">
+        No mundo atual, reclamar de “não tenho tempo pra redes sociais” não basta: <strong>quando alguém busca um advogado, a <span className="underline decoration-[#C9A24A] decoration-2">primeira parada é o Google</span></strong>. Um site de advocacia profissional e bem estruturado funciona como sua vitrine digital: mostra sua história, sua autoridade, seus serviços e seu diferencial. É sua chance de controlar a narrativa, transmitir credibilidade e converter visitantes em clientes — 24 horas por dia, 7 dias por semana.
+      </p>
+
+      <div>
+        <a 
+          href={WA_LINK} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="btn-gold inline-flex items-center gap-2"
+        >
+          <span className="font-bold text-base">»</span> Pedir Orçamento
+        </a>
+      </div>
+    </div>
+  </section>
+);
+
+// SECTION 4: "Todos os sites para advogados incluem:"
+const WhatsIncluded = () => {
+  const items = [
+    {
+      icon: <Smartphone className="text-[#C9A24A]" size={26} />,
+      title: "Layout Responsivo",
+      desc: "Site adapta-se a qualquer tipo de tela que é acessado: computador, tablet e celular com navegação fluida."
+    },
+    {
+      icon: <MessageCircle className="text-[#C9A24A]" size={26} />,
+      title: "Ícone de Whatsapp e Redes Sociais",
+      desc: "Receba contatos diretamente no Whatsapp e redes sociais com apenas 1 clique, sem barreiras para o cliente."
+    },
+    {
+      icon: <Star className="text-[#C9A24A]" size={26} />,
+      title: "Avaliações Google",
+      desc: "Adicione suas avaliações do Google Meu Negócio como prova social para outras pessoas te contratarem também."
+    },
+    {
+      icon: <MapPin className="text-[#C9A24A]" size={26} />,
+      title: "Google Maps",
+      desc: "O endereço do seu escritório já aparece direto no mapa do Google no seu site para facilitar a localização."
+    },
+    {
+      icon: <FileText className="text-[#C9A24A]" size={26} />,
+      title: "Formulário de Contato",
+      desc: "Receba contato dos potenciais clientes com triagem de caso direto na sua caixa de e-mail."
+    },
+    {
+      icon: <Globe className="text-[#C9A24A]" size={26} />,
+      title: "Blog Jurídico",
+      desc: "Mantenha a sua audiência atualizada com os temas jurídicos em alta e seja encontrado organicamente no Google."
+    },
+    {
+      icon: <ShieldCheck className="text-[#C9A24A]" size={26} />,
+      title: "Certificado de Segurança",
+      desc: "Garantia de que seu site é seguro (HTTPS/SSL), transmitindo total confiança e proteção aos seus clientes."
+    },
+    {
+      icon: <Mail className="text-[#C9A24A]" size={26} />,
+      title: "Email Profissional",
+      desc: "Envie e receba emails profissionais com seu domínio próprio, por exemplo contato@seuescritorio.adv.br."
+    },
+    {
+      icon: <Server className="text-[#C9A24A]" size={26} />,
+      title: "Hospedagem",
+      desc: "É o servidor veloz onde ficarão armazenados os dados do site. Já cuidamos de toda a configuração para você."
+    }
+  ];
+
+  return (
+    <section id="o-que-inclui" className="py-20 bg-[#F8F9FA] border-b border-gray-200/70">
+      <div className="max-w-7xl mx-auto px-6">
+        
+        <div className="text-center mb-16">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 mb-3">
+            Todos os sites para advogados incluem:
+          </h2>
+          <p className="text-gray-500 text-sm sm:text-base">
+            Uma estrutura técnica e comercial completa, pronta para gerar autoridade imediata.
+          </p>
+        </div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {items.map(item => (
+            <div 
+              key={item.title}
+              className="card-service p-8 text-left bg-white shadow-xs"
+            >
+              <div className="w-12 h-12 rounded-xl bg-[#C9A24A]/10 flex items-center justify-center mb-5">
+                {item.icon}
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">
+                {item.title}
+              </h3>
+              <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">
+                {item.desc}
               </p>
             </div>
-          </div>
-        </motion.div>
+          ))}
+        </div>
 
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }} 
-          whileInView={{ opacity: 1, scale: 1 }} 
-          viewport={{ once: true }} 
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="relative group"
+      </div>
+    </section>
+  );
+};
+
+// SECTION: SEO Niche Solutions (Internal Linking Hub for Google Search Console)
+const NicheSolutionsSection = ({ onNavigatePage }: { onNavigatePage: (slug: string) => void }) => {
+  const pages = Object.values(SEO_PAGES);
+
+  return (
+    <section id="especialidades" className="py-20 bg-white border-b border-gray-100">
+      <div className="max-w-7xl mx-auto px-6 text-center">
+        
+        <div className="inline-block bg-[#F1F3F5] text-gray-700 text-xs font-semibold px-4 py-1.5 rounded-full mb-3">
+          Especialidades & Nichos
+        </div>
+
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 mb-4">
+          Sites Especializados por Ramo do Direito
+        </h2>
+
+        <p className="text-gray-500 text-sm sm:text-base max-w-2xl mx-auto mb-14 leading-relaxed">
+          Cada área da advocacia tem um perfil de cliente e um vocabulário de busca único no Google. Conheça nossas soluções nichadas prontas para ranqueamento:
+        </p>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 text-left mb-10">
+          {pages.map(p => (
+            <a
+              key={p.slug}
+              href={`/${p.slug}`}
+              onClick={(e) => {
+                e.preventDefault();
+                onNavigatePage(p.slug);
+              }}
+              className="card-service p-6 bg-white border border-gray-200/90 hover:border-[#C9A24A] transition-all flex flex-col justify-between group shadow-xs"
+            >
+              <div>
+                <div className="text-[11px] font-bold text-[#C9A24A] uppercase tracking-wider mb-2">
+                  {p.badge}
+                </div>
+                <h3 className="font-extrabold text-gray-900 text-base mb-2 group-hover:text-[#C9A24A] transition-colors leading-snug">
+                  {p.headline}
+                </h3>
+                <p className="text-gray-500 text-xs line-clamp-2 leading-relaxed">
+                  {p.subheadline}
+                </p>
+              </div>
+
+              <div className="mt-5 pt-3 border-t border-gray-100 flex items-center justify-between text-xs font-semibold text-gray-800 group-hover:text-[#C9A24A]">
+                <span>Conhecer Solução</span>
+                <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              </div>
+            </a>
+          ))}
+        </div>
+
+      </div>
+    </section>
+  );
+};
+
+// SECTION 5: Quem está por trás da JurisSites (COM A FOTO DO CASAL LUCAS E LAYLA!)
+const AboutFounders = () => (
+  <section id="sobre-nos" className="py-20 bg-[#F8F9FA] border-b border-gray-200/70">
+    <div className="max-w-7xl mx-auto px-6">
+      <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+        
+        {/* Left Column: Story & Authority */}
+        <div className="lg:col-span-6 text-left">
+          <div className="inline-block bg-[#F1F3F5] text-gray-700 text-xs font-semibold px-4 py-1.5 rounded-full mb-4">
+            Quem Somos
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 leading-tight mb-6">
+            A união entre o rigor do <span className="text-[#C9A24A]">Direito</span> e a excelência da <span className="text-[#C9A24A]">Tecnologia</span>
+          </h2>
+
+          <div className="space-y-4 text-gray-600 text-sm sm:text-base leading-relaxed">
+            <p>
+              A <strong>JurisSites</strong> nasceu de uma necessidade real percebida dentro da própria advocacia: advogados brilhantes no mundo físico que ficavam invisíveis ou mal posicionados na internet.
+            </p>
+            <p>
+              Nossa agência é liderada por <strong>Layla Marreta</strong>, advogada que conhece de perto a rotina forense, as exigências dos clientes e os limites éticos do Código de Ética da OAB, e <strong>Lucas Rodrigues</strong>, especialista em tecnologia, desenvolvimento web e marketing digital estratégico.
+            </p>
+            <p>
+              Essa união garante que o seu site não seja apenas "bonito", mas tecnicamente impecável, seguro, veloz e rigorosamente alinhado às diretrizes do Provimento 205/2021 da OAB sobre publicidade jurídica sóbria e informativa.
+            </p>
+          </div>
+
+          <div className="mt-8 pt-6 border-t border-gray-200 flex items-center gap-6">
+            <div>
+              <div className="text-2xl font-extrabold text-[#C9A24A]">100%</div>
+              <div className="text-xs text-gray-500 font-medium uppercase tracking-wider">Foco Jurídico</div>
+            </div>
+            <div className="h-10 w-px bg-gray-300" />
+            <div>
+              <div className="text-2xl font-extrabold text-gray-900">Zero</div>
+              <div className="text-xs text-gray-500 font-medium uppercase tracking-wider">Preocupação Técnica</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column: FOTO DE LUCAS E LAYLA */}
+        <div className="lg:col-span-6">
+          <div className="relative mx-auto max-w-md">
+            <div className="absolute -inset-2 bg-gradient-to-r from-[#C9A24A]/25 to-amber-400/20 rounded-2xl blur-xl opacity-70" />
+            
+            <div className="relative rounded-2xl overflow-hidden border border-gray-200 shadow-xl bg-white">
+              <img 
+                src="/images/lucas-e-layla.png" 
+                alt="Lucas e Layla - Fundadores da JurisSites" 
+                className="w-full h-auto object-cover"
+              />
+              <div className="p-5 bg-white border-t border-gray-100 text-left">
+                <div className="font-extrabold text-lg text-gray-900">Lucas Rodrigues & Layla Marreta</div>
+                <div className="text-xs font-semibold text-[#C9A24A] uppercase tracking-wider">Fundadores da JurisSites</div>
+                <div className="text-xs text-gray-500 mt-1">Advocacia Ética & Estratégia Digital de Alta Performance</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+);
+
+// SECTION 6: Buscas Mensais no Google (SEMrush / Ubersuggest)
+const MonthlySearches = () => {
+  const stats = [
+    { area: "Advogado Trabalhista", count: "110.000+", desc: "Demissões, verbas rescisórias e horas extras" },
+    { area: "Advogado de Família", count: "90.000+", desc: "Divórcios, pensão alimentícia e guarda de filhos" },
+    { area: "Advogado Previdenciário", count: "85.000+", desc: "Aposentadorias, BPC/LOAS e revisões do INSS" },
+    { area: "Advogado Criminalista", count: "65.000+", desc: "Audiências de custódia, flagrantes e defesas criminais" },
+    { area: "Advogado Tributário", count: "45.000+", desc: "Recuperação tributária e planejamento fiscal" },
+    { area: "Advogado Imobiliário", count: "40.000+", desc: "Usucapião, regularização de imóveis e contratos" },
+  ];
+
+  return (
+    <section className="py-20 bg-white border-b border-gray-100">
+      <div className="max-w-7xl mx-auto px-6">
+        
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="inline-block bg-[#F1F3F5] text-gray-700 text-xs font-semibold px-4 py-1.5 rounded-full mb-3">
+            Potencial de Crescimento
+          </div>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 mb-4">
+            Buscas mensais por advogado na Internet
+          </h2>
+          <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
+            Saiba quantos clientes você está perdendo por não ter um site ainda. Palavras-chave procuradas por mês no Brasil (Fontes: SEMrush e Ubersuggest).
+          </p>
+        </div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          {stats.map(s => (
+            <div key={s.area} className="bg-white p-6 rounded-xl border border-gray-200/80 shadow-xs text-left">
+              <div className="flex items-center justify-between mb-3">
+                <span className="font-bold text-gray-900 text-base">{s.area}</span>
+                <span className="text-xs font-bold text-[#C9A24A] bg-[#C9A24A]/10 border border-[#C9A24A]/30 px-3 py-1 rounded-full">
+                  {s.count} buscas
+                </span>
+              </div>
+              <p className="text-gray-500 text-xs leading-relaxed">{s.desc}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="text-center">
+          <a 
+            href={WA_LINK} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="btn-gold inline-flex items-center gap-2"
+          >
+            <span className="font-bold text-base">»</span> Quero Estar Visível no Google
+          </a>
+        </div>
+
+      </div>
+    </section>
+  );
+};
+
+// SECTION 7: "Serve para o Advogado e Escritório de Advocacia que..."
+const TargetAudience = () => {
+  const checks = [
+    {
+      title: "Quer ter solução completa",
+      desc: "Fazemos tudo para você: site, hospedagem e email. Sem necessidade de conhecimentos técnicos."
+    },
+    {
+      title: "Não quer perder tempo",
+      desc: "Já está tudo incluso, não se preocupe com a parte técnica para ter o seu site no ar com rapidez."
+    },
+    {
+      title: "Quer captar mais clientes",
+      desc: "Tenha página de alta conversão voltada para transformar visitantes em contatos reais no WhatsApp."
+    },
+    {
+      title: "Site personalizado",
+      desc: "Todo o site é personalizado com a identidade visual do escritório, aumentando a credibilidade e autoridade do advogado."
+    }
+  ];
+
+  return (
+    <section className="py-20 bg-[#F8F9FA] border-b border-gray-200/70">
+      <div className="max-w-4xl mx-auto px-6 text-center">
+        
+        <div className="inline-block bg-[#F1F3F5] text-gray-700 text-xs font-semibold px-4 py-1.5 rounded-full mb-3">
+          Para Quem Serve
+        </div>
+
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 mb-12">
+          Serve para o Advogado e Escritório de Advocacia que...
+        </h2>
+
+        <div className="grid sm:grid-cols-2 gap-5 mb-10 text-left">
+          {checks.map(c => (
+            <div key={c.title} className="p-6 rounded-xl border border-gray-200 bg-white shadow-xs flex items-start gap-4">
+              <div className="w-7 h-7 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
+                <Check size={16} strokeWidth={3} />
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900 text-base mb-1">{c.title}</h3>
+                <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">{c.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <a 
+          href={WA_LINK} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="btn-gold inline-flex items-center gap-2"
         >
-          <div className="absolute -inset-4 bg-[#C9A24A]/10 rounded-sm blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"/>
-          <div className="relative aspect-[4/5] overflow-hidden border border-white/10 rounded-sm">
-            <img 
-              src="/images/lucas-e-layla.png" 
-              alt="Lucas e Layla - Fundadores da JurisSites" 
-              className="w-full h-full object-cover grayscale-[0.3] hover:grayscale-0 transition-all duration-700"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60"/>
-            <div className="absolute bottom-6 left-6 right-6">
-              <div className="text-white font-light text-xl" style={{ fontFamily: 'Cormorant Garamond,serif' }}>Lucas & Layla</div>
-              <div className="text-white/40 text-[10px] uppercase tracking-[0.2em]">Fundadores JurisSites</div>
-            </div>
-          </div>
-          
-          {/* Stats Overlay */}
-          <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:-left-12 grid grid-cols-1 gap-2">
-            <div className="card-premium py-3 px-5 rounded-sm whitespace-nowrap shadow-2xl">
-              <div className="text-lg text-[#C9A24A] font-light" style={{ fontFamily: 'Cormorant Garamond,serif' }}>100%</div>
-              <div className="text-white/40 text-[9px] uppercase tracking-wider">Foco Jurídico</div>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-    </div>
-  </section>
-);
+          <span className="font-bold text-base">»</span> PEDIR ORÇAMENTO
+        </a>
 
-const Problem = () => (
-  <section className="section-padding bg-section-dark">
-    <div className="max-w-5xl mx-auto px-6 text-center">
-      <motion.div initial={{opacity:0,y:24}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:0.8}}>
-        <div className="tag-gold justify-center mb-5">
-          <span className="w-5 h-px bg-[#C9A24A]"/> O problema
-          <span className="w-5 h-px bg-[#C9A24A]"/>
-        </div>
-        <h2 className="text-3xl lg:text-5xl font-light text-white mb-4 leading-tight" style={{fontFamily:'Cormorant Garamond,serif'}}>
-          Você está sendo <span className="text-gold-gradient italic">escolhido</span> ou ignorado no digital?
-        </h2>
-        <div className="gold-divider-center mb-8"/>
-        <p className="text-white/55 text-sm lg:text-base leading-relaxed max-w-2xl mx-auto mb-4">
-          Antes de entrar em contato, o cliente pesquisa, compara e analisa quem transmite mais confiança.
-        </p>
-        <p className="text-white/45 text-sm lg:text-base leading-relaxed max-w-2xl mx-auto mb-12">
-          Se sua presença digital não acompanha o nível do seu trabalho, você perde espaço — mesmo sendo um excelente advogado.
-        </p>
-        <div className="grid sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
-          {[
-            'Seu perfil não transmite autoridade',
-            'Você não aparece com relevância no Google',
-            'Seu posicionamento digital é fraco ou inexistente',
-            'Outros advogados estão sendo escolhidos no seu lugar',
-          ].map(item => (
-            <div key={item} className="card-premium rounded-sm p-5 flex items-start gap-3 text-left">
-              <span className="text-[#C9A24A] mt-0.5 shrink-0">✕</span>
-              <span className="text-white/60 text-sm">{item}</span>
-            </div>
-          ))}
-        </div>
-      </motion.div>
-    </div>
-  </section>
-);
-
-const Solution = () => (
-  <section className="section-padding bg-section-card border-y border-white/5">
-    <div className="max-w-5xl mx-auto px-6 text-center">
-      <motion.div initial={{opacity:0,y:24}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:0.8}}>
-        <div className="tag-gold justify-center mb-5">
-          <span className="w-5 h-px bg-[#C9A24A]"/> A solução
-          <span className="w-5 h-px bg-[#C9A24A]"/>
-        </div>
-        <h2 className="text-3xl lg:text-5xl font-light text-white mb-4 leading-tight" style={{fontFamily:'Cormorant Garamond,serif'}}>
-          Posicionamento digital que gera{' '}
-          <span className="text-gold-gradient italic">oportunidades reais</span>
-        </h2>
-        <div className="gold-divider-center mb-8"/>
-        <p className="text-white/55 text-sm lg:text-base leading-relaxed max-w-2xl mx-auto mb-4">
-          Desenvolvemos sites jurídicos com foco em posicionamento, clareza e conversão.
-        </p>
-        <p className="text-white/45 text-sm lg:text-base leading-relaxed max-w-2xl mx-auto">
-          Cada detalhe é pensado para valorizar sua imagem profissional e facilitar o contato com potenciais clientes.
-        </p>
-      </motion.div>
-    </div>
-  </section>
-);
-
-const Services = () => {
-  const items = [
-    { icon: <Globe size={22}/>, title: 'Sites profissionais personalizados', desc: 'Projetos únicos que refletem sua identidade profissional e transmitem credibilidade imediata.' },
-    { icon: <Layout size={22}/>, title: 'Landing pages estratégicas', desc: 'Páginas focadas em conversão, criadas para transformar visitantes em clientes potenciais.' },
-    { icon: <Zap size={22}/>, title: 'Estrutura de conversão', desc: 'Arquitetura de informação pensada para guiar o cliente ao contato de forma natural.' },
-    { icon: <MessageCircle size={22}/>, title: 'Integração com WhatsApp', desc: 'Contato direto e imediato com seus clientes, integrado de forma estratégica ao site.' },
-  ];
-  return (
-    <section id="servicos" className="section-padding bg-section-dark">
-      <div className="max-w-6xl mx-auto px-6">
-        <motion.div initial={{opacity:0,y:24}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:0.8}} className="mb-16 lg:mb-20 text-center lg:text-left">
-          <div className="tag-gold mb-5 justify-center lg:justify-start"><span className="w-5 h-px bg-[#C9A24A]"/> Serviços</div>
-          <h2 className="text-3xl lg:text-5xl font-light text-white leading-tight" style={{fontFamily:'Cormorant Garamond,serif'}}>
-            Soluções para advogados que <span className="text-gold-gradient italic">querem crescer</span>
-          </h2>
-        </motion.div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {items.map((item, i) => (
-            <motion.div key={item.title} initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:0.6,delay:i*0.1}}
-              className="card-premium rounded-sm p-7 flex flex-col items-center text-center lg:items-start lg:text-left gap-4">
-              <div className="w-10 h-10 rounded-sm flex items-center justify-center text-[#C9A24A] bg-[#C9A24A]/10">{item.icon}</div>
-              <h3 className="text-white font-medium text-sm leading-snug">{item.title}</h3>
-              <p className="text-white/45 text-xs leading-relaxed">{item.desc}</p>
-            </motion.div>
-          ))}
-        </div>
       </div>
     </section>
   );
 };
 
-const Process = () => {
-  const steps = [
-    { n: '01', title: 'Diagnóstico', desc: 'Entendemos seu perfil, público e objetivos para construir a estratégia certa.' },
-    { n: '02', title: 'Planejamento', desc: 'Definimos arquitetura, copy e estrutura de conversão do seu site.' },
-    { n: '03', title: 'Criação', desc: 'Desenvolvemos um site premium, moderno e alinhado com sua identidade.' },
-    { n: '04', title: 'Entrega', desc: 'Publicamos, testamos e entregamos com suporte completo na transição.' },
+// SECTION 8: FAQ Accordion
+const FAQ = () => {
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+  const faqs = [
+    {
+      q: "O site segue as normas do Código de Ética e Provimento da OAB?",
+      a: "Sim, integralmente. Todos os nossos projetos são desenvolvidos sob a ótica do Provimento 205/2021 da OAB, prezando pelo caráter informativo, sóbrio e sem mercantilização da advocacia."
+    },
+    {
+      q: "Eu preciso entender de programação para ter meu site?",
+      a: "Não! Nós entregamos a solução 100% pronta chave na mão: cuidamos do registro/apontamento de domínio, hospedagem, e-mails corporativos, desenvolvimento visual e testes de velocidade."
+    },
+    {
+      q: "Qual é o prazo de entrega do site?",
+      a: "Em média entre 7 e 15 dias úteis após a coleta das informações e materiais do seu escritório."
+    },
+    {
+      q: "O site já vem com botão do WhatsApp?",
+      a: "Sim! Instalamos o botão flutuante oficial do WhatsApp com mensagem personalizada para que o cliente clique e fale direto com você ou com a sua equipe."
+    },
+    {
+      q: "Vocês atendem advogados de qualquer lugar do Brasil?",
+      a: "Sim, atendemos advogados autônomos e escritórios em todos os estados do país com atendimento próximo e 100% digital."
+    }
   ];
+
   return (
-    <section id="processo" className="section-padding bg-section-card border-y border-white/5">
-      <div className="max-w-6xl mx-auto px-6">
-        <motion.div initial={{opacity:0,y:24}} whileInView={{opacity:1,y:0}} viewport={{once:true}} className="text-center mb-16 lg:mb-20">
-          <div className="tag-gold justify-center mb-5"><span className="w-5 h-px bg-[#C9A24A]"/> Como funciona <span className="w-5 h-px bg-[#C9A24A]"/></div>
-          <h2 className="text-3xl lg:text-5xl font-light text-white leading-tight" style={{fontFamily:'Cormorant Garamond,serif'}}>
-            Um processo simples, estratégico <span className="text-gold-gradient italic">e eficiente</span>
-          </h2>
-        </motion.div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-6">
-          {steps.map((s, i) => (
-            <motion.div key={s.n} initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:0.6,delay:i*0.12}}
-              className="relative flex flex-col items-center text-center lg:items-start lg:text-left">
-              {i < steps.length - 1 && <div className="hidden lg:block absolute top-8 left-full w-full h-px bg-gradient-to-r from-[#C9A24A]/30 to-transparent z-0"/>}
-              <div className="relative z-10">
-                <div className="step-number mb-2">{s.n}</div>
-                <div className="w-8 h-px bg-[#C9A24A]/40 mb-4 mx-auto lg:ml-0"/>
-                <h3 className="text-white font-semibold text-sm mb-3 tracking-wide">{s.title}</h3>
-                <p className="text-white/45 text-xs leading-relaxed">{s.desc}</p>
+    <section id="faq" className="py-20 bg-white border-b border-gray-100">
+      <div className="max-w-3xl mx-auto px-6 text-center">
+        
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 mb-3">
+          Perguntas Frequentes
+        </h2>
+        <p className="text-gray-500 text-sm sm:text-base mb-12">
+          Tire suas principais dúvidas sobre a criação do site do seu escritório.
+        </p>
+
+        <div className="space-y-4 text-left">
+          {faqs.map((f, i) => {
+            const isOpen = openIndex === i;
+            return (
+              <div key={f.q} className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-xs">
+                <button 
+                  onClick={() => setOpenIndex(isOpen ? null : i)}
+                  className="w-full p-5 text-left font-bold text-gray-900 text-sm sm:text-base flex items-center justify-between gap-4 hover:text-[#C9A24A] transition-colors"
+                >
+                  <span>{f.q}</span>
+                  <span className="text-[#C9A24A] shrink-0">
+                    {isOpen ? <Minus size={18} /> : <Plus size={18} />}
+                  </span>
+                </button>
+                {isOpen && (
+                  <div className="px-5 pb-5 pt-1 text-gray-600 text-xs sm:text-sm leading-relaxed border-t border-gray-100">
+                    {f.a}
+                  </div>
+                )}
               </div>
-            </motion.div>
-          ))}
+            );
+          })}
         </div>
+
       </div>
     </section>
   );
 };
 
-const Differentials = () => {
-  const items = [
-    'Especialização no mercado jurídico',
-    'Foco em posicionamento e resultado',
-    'Projetos personalizados',
-    'Design moderno e profissional',
-    'Atendimento próximo e estratégico',
-  ];
+// FOOTER (With links to all specialized niche SEO pages)
+const Footer = ({ onNavigatePage }: { onNavigatePage: (slug: string) => void }) => {
+  const pages = Object.values(SEO_PAGES);
+
   return (
-    <section id="diferenciais" className="section-padding bg-section-dark">
-      <div className="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
-        <motion.div initial={{opacity:0,x:-30}} whileInView={{opacity:1,x:0}} viewport={{once:true}} transition={{duration:0.8}} className="text-center lg:text-left">
-          <div className="tag-gold mb-5 justify-center lg:justify-start"><span className="w-5 h-px bg-[#C9A24A]"/> Diferenciais</div>
-          <h2 className="text-3xl lg:text-5xl font-light text-white mb-6 leading-tight" style={{fontFamily:'Cormorant Garamond,serif'}}>
-            Por que escolher <span className="text-gold-gradient italic">a JurisSites</span>
-          </h2>
-          <div className="gold-divider mx-auto lg:ml-0 mb-8"/>
-          <div className="space-y-4 inline-block text-left">
-            {items.map((item, i) => (
-              <motion.div key={item} initial={{opacity:0,x:-20}} whileInView={{opacity:1,x:0}} viewport={{once:true}} transition={{duration:0.5,delay:i*0.08}}
-                className="flex items-center gap-4">
-                <CheckCircle2 size={16} className="text-[#C9A24A] shrink-0"/>
-                <span className="text-white/70 text-sm">{item}</span>
-              </motion.div>
+    <footer className="bg-white py-14 border-t border-gray-200 text-center">
+      <div className="max-w-7xl mx-auto px-6">
+        
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-10 border-b border-gray-100">
+          <div className="flex items-center gap-3">
+            <img src="/logo-jurissites.png" alt="JurisSites" className="h-8 w-auto object-contain" />
+            <span className="font-extrabold text-lg text-gray-900">JurisSites</span>
+            <span className="text-xs text-gray-400 border-l border-gray-300 pl-3">Especialistas em Sites para Advogados</span>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-gray-600">
+            <a href="#home" className="hover:text-[#C9A24A]">Início</a>
+            <a href="#como-funciona" className="hover:text-[#C9A24A]">Como Funciona</a>
+            <a href="#o-que-inclui" className="hover:text-[#C9A24A]">O que Inclui</a>
+            <a href="#sobre-nos" className="hover:text-[#C9A24A]">Sobre Nós</a>
+            <a href="#faq" className="hover:text-[#C9A24A]">Dúvidas</a>
+            <a 
+              href={INSTAGRAM_LINK} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              aria-label="Instagram @jurissites"
+              className="inline-flex items-center gap-1.5 font-semibold text-[#C9A24A] hover:underline"
+            >
+              <Instagram size={14} /> @jurissites
+            </a>
+          </div>
+        </div>
+
+        {/* SEO Landing Page Links in Footer for Googlebot Crawling */}
+        <div className="py-8 border-b border-gray-100 text-left">
+          <div className="text-xs font-bold text-gray-900 uppercase tracking-wider mb-4">
+            Especialidades Jurídicas Atendidas (Páginas Especializadas):
+          </div>
+          <div className="flex flex-wrap gap-x-6 gap-y-2.5 text-xs text-gray-500">
+            {pages.map(p => (
+              <a
+                key={p.slug}
+                href={`/${p.slug}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  onNavigatePage(p.slug);
+                }}
+                className="hover:text-[#C9A24A] transition-colors"
+              >
+                {p.headline}
+              </a>
             ))}
           </div>
-        </motion.div>
-        <motion.div initial={{opacity:0,x:30}} whileInView={{opacity:1,x:0}} viewport={{once:true}} transition={{duration:0.8,delay:0.2}}
-          className="card-premium rounded-sm p-10 lg:p-12">
-          <div className="tag-gold mb-6"><span className="w-5 h-px bg-[#C9A24A]"/> Resultados</div>
-          <h3 className="text-2xl lg:text-3xl font-light text-white mb-8 leading-tight" style={{fontFamily:'Cormorant Garamond,serif'}}>
-            O impacto de um posicionamento <span className="text-gold-gradient italic">profissional</span>
-          </h3>
-          <div className="space-y-5">
-            {['Mais autoridade','Mais visibilidade','Mais confiança','Mais oportunidades de clientes'].map((r, i) => (
-              <div key={r} className="flex items-center gap-4 pb-5 border-b border-white/5 last:border-0 last:pb-0">
-                <span className="text-[#C9A24A] font-light text-lg" style={{fontFamily:'Cormorant Garamond,serif'}}>0{i+1}</span>
-                <span className="text-white/75 text-sm font-medium">{r}</span>
-              </div>
-            ))}
-          </div>
-        </motion.div>
+        </div>
+
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-400 gap-4">
+          <p>© {new Date().getFullYear()} JurisSites. Todos os direitos reservados.</p>
+          <p>Conforme Provimento 205/2021 do CFOAB · Publicidade Jurídica Ética</p>
+        </div>
+
       </div>
-    </section>
+    </footer>
   );
 };
 
-const FinalCTA = () => (
-  <section className="section-padding relative overflow-hidden bg-section-card border-t border-white/5">
-    <div className="absolute inset-0 pointer-events-none">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px]" style={{background:'radial-gradient(ellipse,rgba(201,162,74,0.08) 0%,transparent 70%)'}}/>
-    </div>
-    <div className="relative z-10 max-w-3xl mx-auto px-6 text-center">
-      <motion.div initial={{opacity:0,y:24}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:0.8}}>
-        <div className="tag-gold justify-center mb-5">
-          <span className="w-5 h-px bg-[#C9A24A]"/> Próximo passo <span className="w-5 h-px bg-[#C9A24A]"/>
-        </div>
-        <h2 className="text-3xl lg:text-5xl font-light text-white mb-6 leading-tight" style={{fontFamily:'Cormorant Garamond,serif'}}>
-          Eleve seu posicionamento <span className="text-gold-gradient italic">no digital</span>
-        </h2>
-        <div className="gold-divider-center mb-8"/>
-        <p className="text-white/55 text-sm lg:text-base leading-relaxed max-w-xl mx-auto mb-10">
-          Se você deseja crescer sua autoridade e fortalecer seu escritório, o primeiro passo é ter uma presença digital à altura do seu trabalho.
-        </p>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="btn-primary w-full sm:w-auto">
-            Solicitar meu site profissional <ArrowRight size={15}/>
-          </a>
-          <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="btn-ghost w-full sm:w-auto">
-            <MessageCircle size={15}/> Falar no WhatsApp
-          </a>
-        </div>
-      </motion.div>
-    </div>
-  </section>
-);
-
-const Footer = ({ onNavigateLucas }: { onNavigateLucas: () => void }) => (
-  <footer className="bg-[#080808] border-t border-white/5 py-12 px-6">
-    <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-      <div className="flex items-center gap-3">
-        <img src="/logo-jurissites.png" alt="JurisSites" className="h-8 w-auto object-contain" />
-        <div className="text-white/35 text-xs">Sites para Advogados</div>
-      </div>
-      
-      {/* Botão para acessar a Página do Lucas */}
-      <a 
-        href="/lucas" 
-        onClick={(e) => {
-          e.preventDefault();
-          onNavigateLucas();
-        }}
-        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#C9A24A]/10 border border-[#C9A24A]/40 text-[#C9A24A] hover:bg-[#C9A24A] hover:text-black transition-all text-xs font-semibold uppercase tracking-wider shadow-lg"
-      >
-        <span>Acessar Página do Lucas</span>
-        <ArrowRight size={14} />
-      </a>
-
-      <p className="text-white/25 text-xs">© {new Date().getFullYear()} JurisSites. Todos os direitos reservados.</p>
-    </div>
-  </footer>
-);
-
-const WhatsAppBtn = () => (
-  <motion.a href={WA_LINK} target="_blank" rel="noopener noreferrer"
-    initial={{scale:0,opacity:0}} animate={{scale:1,opacity:1}} transition={{delay:1.2,duration:0.4}}
-    whileHover={{scale:1.05,y:-2}}
-    className="fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-[#25D366] text-white px-4 py-3 rounded-full shadow-2xl animate-pulse-gold group">
-    <MessageCircle size={20}/>
-    <span className="text-xs font-semibold tracking-wide hidden sm:block">Falar no WhatsApp</span>
-  </motion.a>
+// FLOATING WHATSAPP BUTTON (Bottom Right)
+const WhatsAppFloat = () => (
+  <a 
+    href={WA_LINK} 
+    target="_blank" 
+    rel="noopener noreferrer"
+    aria-label="Fale conosco no WhatsApp"
+    className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform animate-pulse-whatsapp"
+  >
+    <MessageCircle size={30} className="fill-current stroke-none" />
+  </a>
 );
 
 export default function App() {
@@ -451,12 +800,12 @@ export default function App() {
     };
   }, []);
 
-  const goToLucas = () => {
-    window.history.pushState(null, '', '/lucas');
+  const navigateTo = (path: string) => {
+    window.history.pushState(null, '', path);
     setCurrentPath({
-      pathname: '/lucas',
-      hash: '',
-      search: ''
+      pathname: window.location.pathname,
+      hash: window.location.hash,
+      search: window.location.search
     });
     window.scrollTo(0, 0);
   };
@@ -473,19 +822,32 @@ export default function App() {
     return <LucasPage />;
   }
 
+  // Check if current route matches one of the 8 specialized SEO landing pages
+  const cleanPath = currentPath.pathname.replace(/^\/+|\/+$/g, '').toLowerCase();
+  if (cleanPath && SEO_PAGES[cleanPath]) {
+    return (
+      <SeoLandingPage 
+        pageData={SEO_PAGES[cleanPath]}
+        onNavigateHome={() => navigateTo('/')}
+        onNavigatePage={(slug) => navigateTo(`/${slug}`)}
+      />
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-[#0B0B0B]">
-      <Navbar onNavigateLucas={goToLucas} />
-      <Hero/>
-      <AboutUs/>
-      <Problem/>
-      <Solution/>
-      <Services/>
-      <Process/>
-      <Differentials/>
-      <FinalCTA/>
-      <Footer onNavigateLucas={goToLucas} />
-      <WhatsAppBtn/>
+    <div className="min-h-screen bg-white text-[#2D3748] selection:bg-[#C9A24A]/20 selection:text-[#1A1A1A]">
+      <Navbar />
+      <Hero />
+      <FourPillars />
+      <ProvocationSection />
+      <WhatsIncluded />
+      <NicheSolutionsSection onNavigatePage={(slug) => navigateTo(`/${slug}`)} />
+      <AboutFounders />
+      <MonthlySearches />
+      <TargetAudience />
+      <FAQ />
+      <Footer onNavigatePage={(slug) => navigateTo(`/${slug}`)} />
+      <WhatsAppFloat />
     </div>
   );
 }
